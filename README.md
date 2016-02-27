@@ -1,4 +1,4 @@
-# dropdownthemall
+# DropDownThemall
 A jquery library to handle everything about drop down menu
 
 this library is still under construction. 
