@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Drop Down Them All Example</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script type="text/javascript" src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
+        <script type="text/javascript" src="../DDTA.js"></script>
+        <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+        <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" />
+        <link rel="stylesheet" type="text/css" href="style.css" />
+    </head>
+    <body class="container">
+        <h1>Drop Down Them All examples</h1>
+        <div id="intro" class="row">
+            Following some examples about the usage of DDTA.
+        </div>
+        
+        <div class="row">
+            <div class="col-md-6">
+                <input type="text" id="example1" name="example1" />
+                
+                <script type="text/javascript">
+                    DDTA.initDD("animals",{
+                        fieldId:"example1",
+                        activeDataSource:"def",
+                        dataSources:{
+                            def:{type:"static",
+                                   source:[
+                                       {key:"cat",labels:{"ANIMAL_NAME":"Cats"}},
+                                       {key:"dog",labels:{"ANIMAL_NAME":"Dogs"}},
+                                       {key:"chick",labels:{"ANIMAL_NAME":"Chickens"}},
+                                       {key:"donk",labels:{"ANIMAL_NAME":"Donkeys"}}
+                                   ]}
+                        },
+                        
+                    });
+                </script>
+            </div>
+            <div class="col-md-6">
+                DDTA.initDD("animals",{<br/>
+                &nbsp;fieldId:"example1",<br/>
+                &nbsp;typingMode : "filterOnly",<br/>
+                &nbsp;activeDataSource:"def",<br/>
+                &nbsp;zebra : true,<br/>
+                &nbsp;dataSources:{<br/>
+                &nbsp;&nbsp;def:{type:"static",<br/>
+                &nbsp;&nbsp;&nbsp;source:[<br/>
+                &nbsp;&nbsp;&nbsp;&nbsp;{key:"cat",labels:{"ANIMAL_NAME":"Cats"}},<br/>
+                &nbsp;&nbsp;&nbsp;&nbsp;{key:"dog",labels:{"ANIMAL_NAME":"Dogs"}},<br/>
+                &nbsp;&nbsp;&nbsp;&nbsp;{key:"chick",labels:{"ANIMAL_NAME":"Chickens"}},<br/>
+                &nbsp;&nbsp;&nbsp;&nbsp;{key:"donk",labels:{"ANIMAL_NAME":"Donkeys"}}<br/>
+                &nbsp;&nbsp;&nbsp;]<br/>
+                &nbsp;&nbsp;},<br/>
+                &nbsp;},   <br/>
+                });<br/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <input type="text" id="example2" name="example2" />
+            </div>
+            <div class="col-md-6">
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <input type="text" id="example3" name="example3" />
+            </div>
+            <div class="col-md-6">
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <input type="text" id="example4" name="example4" />
+            </div>
+            <div class="col-md-6">
+
+            </div>
+        </div>
+    </body>
+</html>
+

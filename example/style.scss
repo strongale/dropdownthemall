@@ -1,0 +1,58 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 27-feb-2016, 20.12.50
+    Author     : strongale
+*/
+
+$zebra1 : #FFF;
+$zebra2 : #DEF;
+$hoverColor : #DDD;
+$textColor : #666;
+$borderColor : #AAA;
+
+.row{
+    height : 300px;
+    padding: 20px 40px;
+    box-sizing: border-box;
+}
+
+.containerDD{
+    border: 1px solid $borderColor;
+    color : $textColor;
+}
+
+.inputDD{
+    width:90%;
+    border: none;
+    padding : 10px;
+}
+
+.DDList{
+    width:100%;
+    list-style: none;
+    border: 1px solid $borderColor;
+    margin:0;
+    padding:0;
+    
+}
+
+.DDElement{
+    background-color: $zebra1;
+    padding: 10px;
+    
+    &.odd{
+        background-color: $zebra2;
+    }
+    
+    &:hover{
+        background-color: $hoverColor;
+    }
+}
+
+.statusIconDD{
+    padding: 10px 7px;
+}
