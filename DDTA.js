@@ -489,18 +489,26 @@ var DDTA = {
         
     /**Starting checks and base element detection
      * */
+        if (this.instances[ddName]) {
+            console.error("The name '"+ddName+"' is already in use for the control #"+this.instances[ddName].parameters.fieldId);
+            return false;
+        }
+        
         if (!parameters.fieldId) {
             console.error("FieldId missing in parameters.");
+            return false;
         }
         
         var field = $("#" + parameters.fieldId);
 
         if (!field.length) {
             console.error("Element #"+parameters.fieldId+" was not found in DOM.");
+            return false;
         }
 
         if (!parameters.dataSources || !parameters.activeDataSource || !parameters.dataSources[parameters.activeDataSource]) {
             console.error("DataSource "+parameters.activeDataSource+" is missing.");
+            return false;
         }
         
     //filling missing parmeters with defaults

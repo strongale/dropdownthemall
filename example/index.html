@@ -73,11 +73,34 @@ and open the template in the editor.
         </div>
         <div class="row">
             <div class="col-md-6">
+                <input type="text" id="example3" name="example3" />
+                
+                <script type="text/javascript">
+                    DDTA.initDD("animals3",{
+                        fieldId:"example3",
+                        activeDataSource:"def",
+                        dataSources:{
+                            def:{type:"ajax",
+                                 source:{
+                                     type: "POST",
+                                     url: "exampleAjax.html"
+                                   
+                                 }
+                            }
+                        }
+                        
+                    });
+                </script>
+            </div>
+            
+        </div>
+        <div class="row">
+            <div class="col-md-6">
                 <input type="text" id="example4Father" name="example4Father" />
                 <input type="text" id="example4Son" name="example4Son" />
                 
                 <script type="text/javascript">
-                    DDTA.initDD("animals",{
+                    DDTA.initDD("animals4",{
                         fieldId:"example4Father",
                         activeDataSource:"def",
                         dataSources:{
