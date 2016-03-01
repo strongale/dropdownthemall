@@ -11,8 +11,9 @@
  * statusIcons:[normal,loading,opened_ognuna{content,classes,cursor}]
  * statusIconPosition
  * activeDataSource
+ * ifSuperChainerEmptyThenShow
  * dataSources
- *      ifSuperChainerEmptyThenShow
+ *      
  *    //fonte statica
  *      [{key,labels,model},{key,labels,model}]
  *    //fonte funzionale
@@ -49,7 +50,14 @@
  *      
  *      check e correzione datasource in initDD. 
  *      conseguente rimozione di controlli simili (vd populateFromAjax)
- *      
+ *      multiple :: flag per abilitare selezione multipla
+ *      multipleWay :: permette di specificare come usare selezioni multiple('and','or')
+ *      ----
+ *      Cambiare chaining in filterDD ( almeno lì, forse anche altrove ). 
+ *      Non storare chainerValues in DOM, ma fare tutto in struttura dati.
+ *      Aggiungere stato visibilità alla voce e leggere quella per decidere se disegnare o no.
+ *      ----
+ *      VD TODO in updateListContent
  * */
 
 var DDTA = {
@@ -72,6 +80,7 @@ var DDTA = {
         typingMode : "disabled",
         dataModels : null,
         disableStatusIcon : false,
+        ifSuperChainerEmptyThenShow:"all",
         statusIcons:{
             normal: {classes: "fa fa-sort-desc", content: "", cursor: "pointer"},
             opened: {classes: "fa fa-sort-desc", content: "", cursor: "pointer"},
@@ -95,7 +104,7 @@ var DDTA = {
         maxEntries : 0,
         minInput : 0,
         showNoResultVoice : true,
-        noResultVoice : "No result",
+        noResultVoice : "No entries",
         disableEmptySelection : false,
         onFirstListPopulationAutocompleteWithFirst: false,
         autocompleteWithContainsAlso : false,
@@ -126,15 +135,15 @@ var DDTA = {
                 complexModelPreviewer.show();
             }
 
-            if (elementSelected.attr("ac-value") && elementSelected.attr("ac-value") !== null && elementSelected.attr("ac-value") !== "undefined") {
-                field.parent().find("#" + parameters.fieldId + "HiddenSelectedKey").first().val(elementSelected.attr("ac-value"));
+            if (elementSelected.attr("dd-el-key") && elementSelected.attr("dd-el-key") !== null && elementSelected.attr("dd-el-key") !== "undefined") {
+                field.parent().find("#" + parameters.fieldId + "HiddenSelectedKey").first().val(elementSelected.attr("dd-el-key"));
             }
 
             if (parameters.chained) {
                 $(parameters.chained).each(function (i, c) {
                     
                     var chainedParams = DDTA.instances[c].parameters;
-                    chainedParams.dataSources[chainedParams.activeDataSource].source.chainerValue = elementSelected.attr("ac-value");
+                    chainedParams.dataSources[chainedParams.activeDataSource].source.chainerValue = elementSelected.attr("dd-el-key");
                     DDTA.resetDD(c);
 
                     //se devo fare focus, evito l'update perchè già triggerato dal focus stesso.
@@ -199,7 +208,7 @@ var DDTA = {
         var found = false;
 
         list.find("li").each(function () {
-            var value2Check = $(this).attr("ac-value");
+            var value2Check = $(this).attr("dd-el-key");
             if ($.type(key) !== "string") {
                 value2Check = parseFloat(value2Check);
             }
@@ -230,7 +239,7 @@ var DDTA = {
         list.find("li").each(function () {
             var chainerValue2Array = [];
             if (parameters.dataSources[parameters.activeDataSource].source.chainerValue) {
-                chainerValue2Array = $(this).attr("master-ac-relative-values").split(',');
+                chainerValue2Array = $(this).attr("master-dd-valid-kyes").split(',');
             }
 
 
@@ -238,7 +247,7 @@ var DDTA = {
                     $(this).text().toLowerCase().indexOf(lowercasedInput) === 0
                     )
                     &&
-                    (!parameters.dataSources[parameters.activeDataSource].source.chainerValue || $(this).attr("master-ac-relative-values") === parameters.dataSources[parameters.activeDataSource].source.chainerValue ||
+                    (!parameters.dataSources[parameters.activeDataSource].source.chainerValue || $(this).attr("master-dd-valid-kyes") === parameters.dataSources[parameters.activeDataSource].source.chainerValue ||
                             $.inArray(parameters.dataSources[parameters.activeDataSource].source.chainerValue, chainerValue2Array) !== -1) //caso voci con master multiple a triggerare separate da ,
                     ) {
                 if (parameters.zebra) {
@@ -317,6 +326,10 @@ var DDTA = {
 //    console.log(this.instances[ddName].lockState);
         var list = $("#" + parameters.fieldId + "DD");
 
+        /**
+         * @TODO: rifare, cambiare: non può stare qui e non si può risolvere ifSuperChainerEmptyThenShow qui e così
+         *      spostare in filterDD. nell'ajax server side, e nella function fanno da sè. 
+         * */
         if (parameters.dataSources[parameters.activeDataSource].source.chainSentence &&
                 (!parameters.dataSources[parameters.activeDataSource].source.chainerValue || parameters.dataSources[parameters.activeDataSource].source.chainerValue === "") &&
                 parameters.ifSuperChainerEmptyThenShow !== "all")
@@ -337,13 +350,13 @@ var DDTA = {
                         case "static":
                             if (list.children("li").length === 0) {
                                 this.populateList(ddName);
-                            } else {
-                                this.filterDD(ddName);
-                            }
+                            } 
+                            this.filterDD(ddName);
+                            
                             break;
                             // fonte funzionale
                         case "function":
-                            this.populateList(ddName);
+                            this.populateList(ddName,parameters.dataSources[parameters.activeDataSource].source());
                             break;
                             // fonte ajax
                         case "ajax":
@@ -415,15 +428,15 @@ var DDTA = {
                     zebraClass += (i % 2 === 0) ? "odd" : "even";  // NB : non sono al contrario (gli indici partono da 0).
                 }
 
-                var element = $("<li ac-value='" + value.key + "' class='" + parameters.classesPrefix + "DDElement " + parameters.addedClasses.listElements + " " + parameters.classesPrefix + zebraClass + "'></li>");
+                var element = $("<li dd-el-key='" + value.key + "' class='" + parameters.classesPrefix + "DDElement " + parameters.addedClasses.listElements + " " + parameters.classesPrefix + zebraClass + "'></li>");
                 if (value.labels) {
                     $.each(value.labels, function (field, fieldContent) {
                         model = model.replace("[_" + field + "_]", fieldContent);
                         element.attr("entryParam_" + field, fieldContent);
                     });
                 }
-                if (value.masterAcRelativeValues) {
-                    element.attr("master-ac-relative-values", value.masterAcRelativeValues);
+                if (value.masterDdValidKyes) {
+                    element.attr("master-dd-valid-kyes", value.masterDdValidKyes);
                 }
                 element.html(model);
 
@@ -468,13 +481,14 @@ var DDTA = {
             this.instances[ddName].lockState = DDTA.IDLE_STATE;
         }
     },
-    /*TODO : 
-     *      multiple :: flag per abilitare selezione multipla
-     *      multipleWay :: permette di specificare come usare selezioni multiple('and','or')
-     *      */
+    /*  
+     * Function to store and init a new DD control.
+     *           
+     **/
     initDD: function (ddName, parameters) {
         
-        //conf statuses
+    /**Starting checks and base element detection
+     * */
         if (!parameters.fieldId) {
             console.error("FieldId missing in parameters.");
         }
@@ -489,7 +503,7 @@ var DDTA = {
             console.error("DataSource "+parameters.activeDataSource+" is missing.");
         }
         
-        //filling missing parmeters with defaults
+    //filling missing parmeters with defaults
         for (var attrname in this.defaultConfig) {
             if(!(attrname in parameters)){
                 parameters[attrname] = this.defaultConfig[attrname]; 
@@ -775,7 +789,6 @@ var DDTA = {
             parameters.chained = finalChainedList;
         }
 
-
         return parameters;
     },
     
@@ -854,7 +867,7 @@ var DDTA = {
         if (parameters.chained) {
             $(parameters.chained).each(function (i, c) {
                 var chainedParams = DDTA.instances[c].parameters;
-                chainedParams.chainerValue = null; // ogni reset resetta i chainer dei figli e non i propri : potrei chiamare una reset anche non in catena.
+                chainedParams.dataSources[chainedParams.activeDataSource].source.chainerValue = null; // ogni reset resetta i chainer dei figli e non i propri : potrei chiamare una reset anche non in catena.
                 DDTA.resetDD(c);
             });
         }
@@ -869,7 +882,7 @@ var DDTA = {
             return null;
         }
 
-        return $("#" + parameters.fieldId + "DD ." + parameters.classesPrefix + "DDElement[ac-value=" + currId + "]");
+        return $("#" + parameters.fieldId + "DD ." + parameters.classesPrefix + "DDElement[dd-el-key=" + currId + "]");
     },
     getSelectedVal: function (ddName) {
         var parameters = this.instances[ddName].parameters;

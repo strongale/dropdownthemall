@@ -42,49 +42,77 @@ and open the template in the editor.
                     });
                 </script>
             </div>
-            <div class="col-md-6">
-                DDTA.initDD("animals",{<br/>
-                &nbsp;fieldId:"example1",<br/>
-                &nbsp;typingMode : "filterOnly",<br/>
-                &nbsp;activeDataSource:"def",<br/>
-                &nbsp;zebra : true,<br/>
-                &nbsp;dataSources:{<br/>
-                &nbsp;&nbsp;def:{type:"static",<br/>
-                &nbsp;&nbsp;&nbsp;source:[<br/>
-                &nbsp;&nbsp;&nbsp;&nbsp;{key:"cat",labels:{"ANIMAL_NAME":"Cats"}},<br/>
-                &nbsp;&nbsp;&nbsp;&nbsp;{key:"dog",labels:{"ANIMAL_NAME":"Dogs"}},<br/>
-                &nbsp;&nbsp;&nbsp;&nbsp;{key:"chick",labels:{"ANIMAL_NAME":"Chickens"}},<br/>
-                &nbsp;&nbsp;&nbsp;&nbsp;{key:"donk",labels:{"ANIMAL_NAME":"Donkeys"}}<br/>
-                &nbsp;&nbsp;&nbsp;]<br/>
-                &nbsp;&nbsp;},<br/>
-                &nbsp;},   <br/>
-                });<br/>
-            </div>
+            
         </div>
         <div class="row">
             <div class="col-md-6">
                 <input type="text" id="example2" name="example2" />
+                
+                <script type="text/javascript">
+                    DDTA.initDD("animals2",{
+                        fieldId:"example2",
+                        activeDataSource:"def",
+                        dataSources:{
+                            def:{type:"function",
+                                 source:function(){
+                                    return  [
+                                       {key:"cat",labels:{"ANIMAL_NAME":"Cats"}},
+                                       {key:"dog",labels:{"ANIMAL_NAME":"Dogs"}},
+                                       {key:"chick",labels:{"ANIMAL_NAME":"Chickens"}},
+                                       {key:"donk",labels:{"ANIMAL_NAME":"Donkeys"}}
+                                    ];    
+                                   
+                                 }
+                            }
+                        }
+                        
+                    });
+                </script>
             </div>
-            <div class="col-md-6">
-
-            </div>
+            
         </div>
         <div class="row">
             <div class="col-md-6">
-                <input type="text" id="example3" name="example3" />
+                <input type="text" id="example4Father" name="example4Father" />
+                <input type="text" id="example4Son" name="example4Son" />
+                
+                <script type="text/javascript">
+                    DDTA.initDD("animals",{
+                        fieldId:"example4Father",
+                        activeDataSource:"def",
+                        dataSources:{
+                            def:{type:"static",
+                                   source:[
+                                       {key:"cat",labels:{"ANIMAL_NAME":"Cats"}},
+                                       {key:"dog",labels:{"ANIMAL_NAME":"Dogs"}},
+                                       {key:"chick",labels:{"ANIMAL_NAME":"Chickens"}},
+                                       {key:"donk",labels:{"ANIMAL_NAME":"Donkeys"}}
+                                   ]}
+                        },
+                        chained:[
+                            {name:"actions",
+                             parameters:{
+                                fieldId:"example4Son",
+                                activeDataSource:"def",
+                                ifSuperChainerEmptyThenShow: "none",
+                                dataSources:{
+                                    def:{type:"static",
+                                           source:[
+                                               {key:"play",labels:{"ACTION_NAME":"Play"},masterAcRelativeValues:"cat,dog"},
+                                               {key:"eat",labels:{"ACTION_NAME":"Eat"},masterAcRelativeValues:"chick,donk"},
+                                               {key:"wash",labels:{"ACTION_NAME":"Wash"},masterAcRelativeValues:"cat,dog,donk"},
+                                               {key:"feed",labels:{"ACTION_NAME":"Feed"},masterAcRelativeValues:"cat,dog,donk,chick"}
+                                           ]}
+                                }
+                             }
+                            }
+                        ]
+                    });
+                </script>
             </div>
-            <div class="col-md-6">
-
-            </div>
+           
         </div>
-        <div class="row">
-            <div class="col-md-6">
-                <input type="text" id="example4" name="example4" />
-            </div>
-            <div class="col-md-6">
-
-            </div>
-        </div>
+ 
     </body>
 </html>
 
