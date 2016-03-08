@@ -9,7 +9,7 @@ and open the template in the editor.
         <title>Drop Down Them All Example</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <script type="text/javascript" src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
+        <script type="text/javascript" src="https://code.jquery.com/jquery-2.2.1.js"></script>
         <script type="text/javascript" src="../DDTA.js"></script>
         <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
         <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" />
@@ -26,18 +26,26 @@ and open the template in the editor.
                 <input type="text" id="example1" name="example1" />
                 
                 <script type="text/javascript">
+                    var statusIconSet = {
+                            normal: {classes: "fa fa-caret-down", content: "", cursor: "pointer"},
+                            opened: {classes: "fa fa-caret-up", content: "", cursor: "pointer"},
+                            loading:{classes: "fa fa-spin fa-spinner", content: "", cursor: "progress"}
+                        };
+                    
                     DDTA.initDD("animals",{
                         fieldId:"example1",
                         activeDataSource:"def",
                         dataSources:{
                             def:{type:"static",
-                                   source:[
-                                       {key:"cat",labels:{"ANIMAL_NAME":"Cats"}},
-                                       {key:"dog",labels:{"ANIMAL_NAME":"Dogs"}},
-                                       {key:"chick",labels:{"ANIMAL_NAME":"Chickens"}},
-                                       {key:"donk",labels:{"ANIMAL_NAME":"Donkeys"}}
-                                   ]}
+                                 source:[{
+                                            "key": "cat",
+                                            "labels": {
+                                                    "ANIMAL_NAME": "Cats"
+                                            }
+                                        }]
+                             }
                         },
+                        statusIcons:statusIconSet
                         
                     });
                 </script>
@@ -64,7 +72,8 @@ and open the template in the editor.
                                    
                                  }
                             }
-                        }
+                        },
+                        statusIcons:statusIconSet
                         
                     });
                 </script>
@@ -83,11 +92,12 @@ and open the template in the editor.
                             def:{type:"ajax",
                                  source:{
                                      type: "POST",
-                                     url: "exampleAjax.html"
+                                     url: "http://localhost/dropdownthemall/example/exampleAjax.php"
                                    
                                  }
                             }
-                        }
+                        },
+                        statusIcons:statusIconSet
                         
                     });
                 </script>
@@ -112,25 +122,74 @@ and open the template in the editor.
                                        {key:"donk",labels:{"ANIMAL_NAME":"Donkeys"}}
                                    ]}
                         },
+                        statusIcons:statusIconSet,
                         chained:[
                             {name:"actions",
                              parameters:{
                                 fieldId:"example4Son",
                                 activeDataSource:"def",
                                 ifSuperChainerEmptyThenShow: "none",
+                                statusIcons:statusIconSet,
                                 dataSources:{
                                     def:{type:"static",
                                            source:[
-                                               {key:"play",labels:{"ACTION_NAME":"Play"},masterAcRelativeValues:"cat,dog"},
-                                               {key:"eat",labels:{"ACTION_NAME":"Eat"},masterAcRelativeValues:"chick,donk"},
-                                               {key:"wash",labels:{"ACTION_NAME":"Wash"},masterAcRelativeValues:"cat,dog,donk"},
-                                               {key:"feed",labels:{"ACTION_NAME":"Feed"},masterAcRelativeValues:"cat,dog,donk,chick"}
+                                               {key:"play",labels:{"ACTION_NAME":"Play"},masterDdValidKyes:"cat,dog"},
+                                               {key:"eat",labels:{"ACTION_NAME":"Eat"},masterDdValidKyes:"chick,donk"},
+                                               {key:"wash",labels:{"ACTION_NAME":"Wash"},masterDdValidKyes:"cat,dog,donk"},
+                                               {key:"feed",labels:{"ACTION_NAME":"Feed"},masterDdValidKyes:"cat,dog,donk,chick"}
                                            ]}
                                 }
                              }
                             }
                         ]
                     });
+                </script>
+            </div>
+           
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <input type="text" id="example5Father" name="example5Father" />
+                <input type="text" id="example5Son" name="example5Son" />
+                
+                <script type="text/javascript">
+                    DDTA.initDD("animals5",
+                                {
+                                    fieldId:"example5Father",
+                                    activeDataSource:"def",
+                                    ifSuperChainerEmptyThenShow: "none",
+                                    dataSources:{
+                                        def:{type:"static",
+                                               source:[
+                                                   {key:"play",labels:{"ACTION_NAME":"Play"},masterDdValidKyes:"cat,dog"},
+                                                   {key:"eat",labels:{"ACTION_NAME":"Eat"}  ,masterDdValidKyes:"chick,donk"},
+                                                   {key:"wash",labels:{"ACTION_NAME":"Wash"},masterDdValidKyes:"cat,dog,donk"},
+                                                   {key:"feed",labels:{"ACTION_NAME":"Feed"},masterDdValidKyes:"cat,dog,donk,chick"}
+                                               ]}
+                                    },
+                                    statusIcons:statusIconSet,
+                                    startingSelectedVal:"eat",
+                                    chained:[{name:"actions2",
+                                              parameters:{
+                                                fieldId:"example5Son",
+                                                activeDataSource:"def",
+                                                dataSources:{
+                                                   def:{type:"static",
+                                                      source:[
+                                                        {key:"cat",labels:{"ANIMAL_NAME":"Cats"},masterDdValidKyes:"play,wash,feed"},
+                                                        {key:"dog",labels:{"ANIMAL_NAME":"Dogs"},masterDdValidKyes:"play,wash,feed"},
+                                                        {key:"chick",labels:{"ANIMAL_NAME":"Chickens"},masterDdValidKyes:"eat,feed"},
+                                                        {key:"donk",labels:{"ANIMAL_NAME":"Donkeys"},masterDdValidKyes: "wash,feed"}
+                                                      ]}
+                                                },
+                                                statusIcons:statusIconSet,
+                                              }
+                                             }
+                                            ]
+                                            
+                                }
+                    );
+                      
                 </script>
             </div>
            
